@@ -23,8 +23,23 @@ clientSocket.send(credentials.encode())
 
 server_message = clientSocket.recv(1024)
 
-print(server_message.decode())
+#print(server_message.decode())
 
+while(server_message.decode() != "1001 Authentication successful"):
+
+    print("1002 Authentication failed")
+
+    username = input("Please input your user name:")
+
+    password = input("Please input your password:")
+
+    credentials ='/login ' + username + ' ' + password
+
+    clientSocket.send(credentials.encode())
+
+    server_message = clientSocket.recv(1024)
+
+print(server_message.decode())
 
 def send_data():
     #print("waiting for command:")
