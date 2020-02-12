@@ -62,19 +62,22 @@ class ServerThread(threading.Thread):
 
 		state = "out_of_house"
 
-		#dummy, username, password = credentials.decode().split(' ')
+		dummy, username, password = credentials.decode().split(' ')
 
 		#password = password.strip()
 
-		while username not in credentails_dict.keys() or credentails_dict[username] != password:
-			try:
-				credentials = connectionSocket.recv(1024)
-				dummy, username, password = credentials.decode().split(' ')
-				password = password.strip()
-				if username not in credentails_dict.keys() or credentails_dict[username] != password:
+		if username not in credentails_dict.keys() or credentails_dict[username] != password:
+
+			while username not in credentails_dict.keys() or credentails_dict[username] != password:
+				try:
 					connectionSocket.send(b"1002 Authentication failed")
-			except socket.error as err:
-				print("Recv error: ", err)
+					credentials = connectionSocket.recv(1024)
+					dummy, username, password = credentials.decode().split(' ')
+					password = password.strip()
+					#if username not in credentails_dict.keys() or credentails_dict[username] != password:
+					#	connectionSocket.send(b"1002 Authentication failed")
+				except socket.error as err:
+					print("Recv error: ", err)
 
 
 
